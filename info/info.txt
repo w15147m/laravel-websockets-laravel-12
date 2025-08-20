@@ -1,0 +1,9 @@
+need to run
+php artisan migrate
+php artisan db:seed
+
+package in use
+
+1) php artisan install:broadcasting
+also
+yes on reverb option

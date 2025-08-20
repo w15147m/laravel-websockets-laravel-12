@@ -10,9 +10,17 @@
         <!-- Sidebar -->
         <div class="w-1/4 border-r bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
             <div class="p-4">
-                <h1 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 p-4">
-                    {{ $user->name }}</h1>
-                <hr class="border-gray-200 dark:border-gray-600 mb-4">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="h-10 w-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+                        {{ strtoupper(substr($user->name, 0, 2)) }}
+                    </div>
+                    <div>
+                        <div class="text-lg font-semibold text-gray-800 dark:text-gray-200"> {{ $user->name }}
+                        </div>
+                    </div>
+                </div>
+                <hr class="border-gray-200 dark:border-gray-600 m-4">
                 <!-- Users -->
                 @foreach ($users as $item)
                     <div wire:click="selectUser({{ $item->id }})"
