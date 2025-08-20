@@ -1,7 +1,7 @@
 <?php
 namespace App\Livewire;
 
-use App\Events\MassageSend;
+use App\Events\MessageSent;
 use App\Models\ChatMessage;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -15,15 +15,16 @@ class Chat extends Component
     public $messages;
     public $user = null;
     public $loginID;
+
     public function mount()
     {
-        $this->user         = User::where('id', Auth::id())->first();
-        $this->users        = User::where('id', '!=', Auth::id())->get();
+        $this->user = User::where('id', Auth::id())->first();
+        $this->users = User::where('id', '!=', Auth::id())->get();
         $this->selectedUser = $this->users->first();
+        $this->loginID = Auth::id(); // Fix: Assign to property, not local variable
         $this->loadMessages();
-        $loginID = Auth::id();
-
     }
+
     private function loadMessages()
     {
         $this->messages = ChatMessage::query()
@@ -36,6 +37,7 @@ class Chat extends Component
                     ->where("receiver_id", Auth::id());
             })->get();
     }
+
     public function selectUser($userId)
     {
         $this->selectedUser = User::find($userId);
@@ -53,15 +55,32 @@ class Chat extends Component
             return;
         }
 
-        $massage = ChatMessage::create([
+        $message = ChatMessage::create([
             "sender_id"   => $this->user->id,
             "receiver_id" => $this->selectedUser->id,
             "message"     => $this->newMessage,
         ]);
-        $this->messages->push($massage);
+
+        $this->messages->push($message);
         $this->newMessage = '';
+        broadcast(new MessageSent($message));
     }
 
+    public function getListeners()
+    {
+        return [
+            // Fix: Correct syntax and channel name
+            "echo-private:chat.{$this->loginID},MessageSent" => "newChatMessageNotification",
+        ];
+    }
 
+    public function newChatMessageNotification($message)
+    {
+        \Log::info('New message received:', $message); // Better logging
 
+        if ($message['sender_id'] == $this->selectedUser->id) {
+            $messageObj = ChatMessage::find($message['id']); // Fix: Typo in model name
+            $this->messages->push($messageObj);
+        }
+    }
 }
