@@ -1,7 +1,7 @@
 <x-layouts.app.sidebar :title="$title ?? null">
-    {{-- @auth
+    @auth
     <meta name="user-id" content="{{ auth()->id() }}">
-@endauth --}}
+@endauth
     <flux:main>
         {{ $slot }}
     </flux:main>
