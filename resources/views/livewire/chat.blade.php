@@ -1,10 +1,4 @@
 <div>
-
-    <div class="relative mb-6 w-full">
-        <flux:heading size="xl" level="1" class="mb-4">{{ __('Chat') }}</flux:heading>
-        {{-- <flux:subheading size="lg" class="mb-6">{{ __('Manage your friends') }}</flux:subheading> --}}
-        <flux:separator variant="subtle" />
-    </div>
     <div
         class="flex h-[700px] text-sm border rounded-xl shadow-lg overflow-hidden bg-white dark:bg-gray-900 dark:border-gray-700">
         <!-- Sidebar -->
